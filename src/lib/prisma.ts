@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import dns from "dns";
+
+// Fix Node.js DNS resolution timeout for Neon DB
+dns.setDefaultResultOrder("ipv4first");
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
@@ -16,14 +20,6 @@ const createPrismaClient = () => {
 
   const pool = new Pool({
     connectionString,
-    max: 10,
-    connectionTimeoutMillis: 15_000,
-    idleTimeoutMillis: 30_000,
-    ssl:
-      connectionString.includes("neon.tech") ||
-      connectionString.includes("sslmode=require")
-        ? { rejectUnauthorized: false }
-        : undefined,
   });
 
   const adapter = new PrismaPg(pool);

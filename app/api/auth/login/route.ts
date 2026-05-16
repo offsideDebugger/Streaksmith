@@ -19,6 +19,14 @@ export async function POST(request: Request) {
     );
   }
 
+  // Demo user bypass
+  if (email === "demo@demo.com" && password === "demo") {
+    await setSessionCookie("demo-user-id");
+    return NextResponse.json({
+      user: { id: "demo-user-id", name: "Demo User", email: "demo@demo.com" },
+    });
+  }
+
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user?.passwordHash) {
