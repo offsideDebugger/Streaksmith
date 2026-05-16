@@ -7,7 +7,7 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   const navItems = [
-    { label: "Dashboard", href: "/dashboard" },
+    { label: "Dashboard", href: "/app" },
     { label: "Habits", href: "/habits" },
     { label: "Rewards", href: "/rewards" },
     { label: "Insights", href: "/insights" },
