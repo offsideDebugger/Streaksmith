@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { SESSION_COOKIE } from "@/lib/auth/session";
-import { parseSessionToken } from "@/lib/auth/session-token";
+import { SESSION_COOKIE } from "@/lib/auth/constants";
 
 const AUTH_PAGES = ["/login", "/signup"];
 const PROTECTED_PREFIXES = ["/app", "/habits", "/rewards", "/insights"];
@@ -16,7 +15,7 @@ const PROTECTED_API_PREFIXES = [
 function isAuthenticated(request: NextRequest) {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   if (!token) return false;
-  return Boolean(parseSessionToken(token));
+  return true;
 }
 
 function isProtectedPath(pathname: string) {
@@ -31,7 +30,7 @@ function isProtectedApi(pathname: string) {
   );
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const authed = isAuthenticated(request);
 

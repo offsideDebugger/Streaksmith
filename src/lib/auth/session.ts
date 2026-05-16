@@ -1,13 +1,12 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { createSessionToken, parseSessionToken } from "@/lib/auth/session-token";
+import { SESSION_COOKIE } from "@/lib/auth/constants";
 
-export const SESSION_COOKIE = "streaksmith_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 export async function setSessionCookie(userId: string) {
   const store = await cookies();
-  store.set(SESSION_COOKIE, createSessionToken(userId), {
+  store.set(SESSION_COOKIE, userId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -25,7 +24,7 @@ export async function getSessionUserId() {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  return parseSessionToken(token);
+  return token;
 }
 
 export async function getSessionUser() {
