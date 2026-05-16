@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Streaksmith
 
-## Getting Started
+> **Turn your habits into an epic quest.**
 
-First, run the development server:
+Streaksmith is a gamified habit-tracking application built for those who want to level up their daily routines. By combining classic habit building with RPG-style elements, Streaksmith keeps you motivated to maintain your streaks, earn coins, and unlock exclusive rewards.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Habit Tracking**: Create, manage, and track daily habits with varying difficulties and frequencies.
+- **Streaks System**: Never break the chain! Track your current and longest streaks for every habit.
+- **Gamification & Rewards**:
+  - **Coins**: Earn coins for completing habits and maintaining streaks.
+  - **Badges**: Unlock special badges of varying rarities (Common, Rare, Epic, Legendary) as you hit milestones.
+  - **Rewards**: Spend your hard-earned coins in the shop to redeem custom rewards.
+- **Daily Missions**: Complete randomized daily missions for bonus rewards.
+- **Secure Authentication**: Built-in credential auth with secure session management.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router & Turbopack)
+- **Frontend**: React 19, Tailwind CSS v4
+- **Database**: PostgreSQL (hosted on [Neon](https://neon.tech/))
+- **ORM**: [Prisma 7](https://www.prisma.io/) 
+- **Package Manager**: [Bun](https://bun.sh/)
 
-To learn more about Next.js, take a look at the following resources:
+## 🏃‍♂️ Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ensure you have [Bun](https://bun.sh/) installed on your machine.
 
-## Deploy on Vercel
+### Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/offsideDebugger/Streaksmith.git
+   cd Streaksmith
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Install dependencies:**
+   ```bash
+   bun install
+   ```
+
+3. **Environment Setup:**
+   Copy the example environment file and add your Neon PostgreSQL database URL.
+   ```bash
+   cp .env.example .env
+   ```
+   *Make sure your `DATABASE_URL` is set in `.env`.*
+
+4. **Database Migration:**
+   Generate the Prisma Client and push the schema to your database:
+   ```bash
+   bun run db:setup
+   ```
+
+5. **Start the Development Server:**
+   ```bash
+   bun run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 🎮 Hackathon Demo Mode
+
+For quick evaluation during the hackathon, we have implemented a **Demo User Bypass**. You can instantly log into the platform and test out the UI without needing to set up a database or register an account.
+
+To use Demo Mode, go to the login page and use the following credentials:
+- **Email:** `demo@demo.com`
+- **Password:** `demo`
+
+*(This will bypass database connection checks and initialize a mocked session with 9999 coins for testing purposes).*
+
+---
+
+## 🤝 Contributing
+
+Feedback and contributions are welcome! Feel free to open an issue or submit a pull request.
