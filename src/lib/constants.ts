@@ -1,0 +1,10 @@
+export const APP_NAME = "Streaksmith";
+
+export const UI = {
+  radius: {
+    sm: "0.5rem",
+    md: "0.75rem",
+    lg: "1rem",
+    xl: "1.25rem",
+  },
+} as const;
