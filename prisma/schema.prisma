@@ -7,23 +7,24 @@ datasource db {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  name        String
-  email       String       @unique
-  coins       Int          @default(0)
-  habits      Habit[]
-  userBadges  UserBadge[]
-  redemptions Redemption[]
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  passwordHash  String?
+  coins         Int            @default(0)
+  habits        Habit[]
+  userBadges    UserBadge[]
+  redemptions   Redemption[]
+  dailyMissions DailyMission[]
 }
 
-
 model Habit {
-  id         String      @id @default(cuid())
+  id         String     @id @default(cuid())
   userId     String
   title      String
   frequency  String
   difficulty String
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   logs       HabitLog[]
   streak     Streak?
 }
@@ -33,36 +34,46 @@ model HabitLog {
   habitId     String
   completedAt DateTime @default(now())
   habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@index([habitId, completedAt])
 }
 
 model Streak {
-  habitId       String   @id
-  current       Int      @default(0)
-  longest       Int      @default(0)
+  habitId       String    @id
+  current       Int       @default(0)
+  longest       Int       @default(0)
   lastCompleted DateTime?
-  habit         Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  habit         Habit     @relation(fields: [habitId], references: [id], onDelete: Cascade)
 }
 
 model Badge {
   id          String      @id @default(cuid())
+  slug        String      @unique
   title       String
   description String
   type        String
+  rarity      String      @default("common")
   userBadges  UserBadge[]
 }
 
 model UserBadge {
+  id         String    @id @default(cuid())
   userId     String
   badgeId    String
-  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  badge      Badge  @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  consumedAt DateTime?
+  earnedAt   DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge      Badge     @relation(fields: [badgeId], references: [id], onDelete: Cascade)
 
-  @@id([userId, badgeId])
+  @@index([userId])
+  @@index([userId, badgeId])
 }
 
 model Reward {
   id          String       @id @default(cuid())
+  slug        String       @unique
   title       String
+  description String       @default("")
   cost        Int
   redemptions Redemption[]
 }
@@ -75,4 +86,17 @@ model Redemption {
   reward     Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
 
   @@id([userId, rewardId, redeemedAt])
+}
+
+model DailyMission {
+  id          String    @id @default(cuid())
+  userId      String
+  title       String
+  missionDate DateTime  @db.Date
+  slot        Int
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, missionDate, slot])
 }

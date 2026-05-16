@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,9 +34,18 @@ export default function MarketingPage() {
             Rewards
           </a>
         </nav>
-        <Button size="sm" variant="outline">
-          Sign In
-        </Button>
+        <div className="flex items-center gap-2">
+          <Link href="/login">
+            <Button size="sm" variant="ghost">
+              Sign in
+            </Button>
+          </Link>
+          <Link href="/signup">
+            <Button size="sm" variant="outline">
+              Sign up
+            </Button>
+          </Link>
+        </div>
       </header>
 
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-6 pb-16">
@@ -53,10 +63,14 @@ export default function MarketingPage() {
               check-ins.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button size="lg">Create your first habit</Button>
-              <Button size="lg" variant="ghost">
-                See live preview
-              </Button>
+              <Link href="/signup">
+                <Button size="lg">Get started free</Button>
+              </Link>
+              <Link href="/login">
+                <Button size="lg" variant="ghost">
+                  Sign in
+                </Button>
+              </Link>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               <Stat label="Weekly Completion" value="86%" />

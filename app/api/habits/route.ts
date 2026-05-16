@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireApiUser } from "@/lib/api-auth";
+import { getHabitsWithStatus } from "@/lib/habit-completion";
 
-const userId = "demo-user";
 const habitSelect = {
   id: true,
   title: true,
@@ -9,33 +10,18 @@ const habitSelect = {
   difficulty: true,
 };
 
-async function ensureDemoUser() {
-  const existing = await prisma.user.findFirst({
-    where: { id: userId },
-    select: { id: true },
-  });
-  if (!existing) {
-    await prisma.user.create({
-      data: {
-        id: userId,
-        name: "Demo User",
-        email: "demo@streaksmith.local",
-      },
-    });
-  }
-}
-
 export async function GET() {
-  await ensureDemoUser();
-  const habits = await prisma.habit.findMany({
-    where: { userId },
-    orderBy: { id: "desc" },
-    select: habitSelect,
-  });
+  const auth = await requireApiUser();
+  if (auth.response) return auth.response;
+
+  const habits = await getHabitsWithStatus(auth.user.id);
   return NextResponse.json({ habits });
 }
 
 export async function POST(request: Request) {
+  const auth = await requireApiUser();
+  if (auth.response) return auth.response;
+
   const body = (await request.json()) as {
     title?: string;
     frequency?: string;
@@ -46,16 +32,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  await ensureDemoUser();
   const habit = await prisma.habit.create({
     data: {
       title: body.title,
       frequency: body.frequency,
       difficulty: body.difficulty,
-      userId,
+      userId: auth.user.id,
     },
     select: habitSelect,
   });
 
-  return NextResponse.json({ habit }, { status: 201 });
+  return NextResponse.json(
+    {
+      habit: {
+        ...habit,
+        isCompleted: false,
+        currentStreak: 0,
+        longestStreak: 0,
+      },
+    },
+    { status: 201 }
+  );
 }
